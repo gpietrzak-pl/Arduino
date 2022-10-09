@@ -1,0 +1,39 @@
+#include "DHT.h"
+#define DHT11_PIN 2
+DHT dht;
+
+
+const int switchPin =  7;// the number of the LED pin
+void setup()
+{
+  Serial.begin(9600);
+  dht.setup(DHT11_PIN);
+  pinMode(switchPin, OUTPUT);  
+  pinMode(10, INPUT_PULLUP); //Przycisk jako wejście
+}
+ 
+void loop()
+{
+  //Pobranie informacji o wilgotnosci
+  int wilgotnosc = dht.getHumidity();
+  //Pobranie informacji o temperaturze
+  int temperatura = dht.getTemperature();
+
+  if (temperatura > 24) {
+   digitalWrite(switchPin, HIGH); 
+  }
+  else
+  {
+    digitalWrite(switchPin, LOW);
+  }
+  
+  if (dht.getStatusString() == "OK") {
+    Serial.print(wilgotnosc);
+    Serial.print("%RH | ");
+    Serial.print(temperatura);
+    Serial.println("*C");
+  }
+  
+  //Odczekanie wymaganego czasugo
+  delay(10000);
+}
